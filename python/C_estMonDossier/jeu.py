@@ -1,26 +1,32 @@
 ﻿import pickle
 import temp
 import jeu
+import csv
+import os
+import time
 
-score = {"joueur 1" : 1,
-         "joueur 2" : 2,
-         "joueur 3" : 3,}
 
-def score (pts, name):
+def score (mot, nom, essaie):
     """Fonction des scores """
-    with open ('scores.txt', "wb") as fichier_sc:
-        mon_pickler = pickle.Pickler(fichier_sc)
-        mon_pickler.dump(score)
+    now = time.ctime()
+    date = time.strftime("%Y, %m, %d, %H", time.strptime(now))
+
+    donneesRecentes = [mot, nom, essaie, date]          # Données que l'on veut rajouter à notre fichier csv
+
+    fichierCSV = open("scores.csv", mode='r', newline='')
+    entreeSCV = csv.reader(fichierCSV, dialect='excel')
+    donnees = []
+    for ligne in entreeSCV:
+        donnees.append(ligne)
+    fichierCSV.close()
 
 
-    fichier_score = open ('scores.txt', 'rb')
-    leUnpickler = pickle.Unpickler(fichier_score)
-    scoreRecupere = leUnpickler.load()
-    print(scoreRecupere)
-    fichier_score.close()
-
-
-
+    fichierCSV = open("scores.csv", mode="w", newline='')
+    sortieCSV = csv.writer(fichierCSV, dialect='excel')
+    for ligne in donnees :
+        sortieCSV.writerow(ligne)
+    sortieCSV.writerow(donneesRecentes)
+    fichierCSV.close()
 
 def motChoisi (a) :
     """Fonction qui renvoie une liste avec le mot caché + le mot à trouver
@@ -63,4 +69,4 @@ def jeu (error, lettre, mot, cache, lvl) :
 
 
 if __name__ == "__main__" :
-    score(1200, "bapt")
+    score("exemple", "Baptiste", "3")
